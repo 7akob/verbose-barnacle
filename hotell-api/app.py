@@ -15,6 +15,7 @@ def hello():
         'method': request.method
     }
 
+@app.route("/")
 
 @app.route("/test", methods=['GET', 'POST'])
 def test():

@@ -1,4 +1,4 @@
-@apiURL = https://vm2208.kaj.pouta.csc.fi:8331/
+@apiURL = {{$dotenv WEBBKOMM_API}}:8331
 
 GET {{apiURL}}/test
 
