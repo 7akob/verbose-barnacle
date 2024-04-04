@@ -25,3 +25,14 @@ Content-Type: application/json
     "name": "Fedora",
     "price": 50
 }
+
+### PATCH uppdatera ett enskilt fält i en produkt
+PATCH {{apiURL}}/1001
+Content-Type: application/json
+{
+    "price": 79.99
+}
+
+### DELETE ta bort en produkt
+
+DELETE {{apiURL}}/1004
