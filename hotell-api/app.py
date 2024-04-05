@@ -1,9 +1,20 @@
+import os, psycopg
+from psycopg.rows import dict_row
 from flask import Flask
 from flask_cors import CORS 
 from flask import request
 from flask import jsonify
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PORT=8332 #Jakobs port
+
+dburl = os.environ.get("DB_URL")
+
+print(dburl)
+
+conn = psycopg.connect(dburl, autocommit=True, row_factory=dict_row)
 
 app = Flask(__name__)
 CORS(app) # Tillåt cross-origin requests
@@ -14,13 +25,21 @@ rooms = [
     {'number': 303, 'type': "single"}
 ]
 
+@app.route("/test")
+def dbtest():
+    with conn.cursor() as cur:
+        cur.execute("SELECT * from people")
+        rows = cur.fetchall()
+        return rows
+
+
 @app.route("/")
-def main():
+def info():
     return "Hotel API, endpoints / rooms / bookings"
 
 
 @app.route("/rooms", methods=['GET', 'POST'])
-def rooms_endpoint():
+def rooms_endpoint(): #Fixa till /rooms-endpointen så den hämtar rumslistan från databasen
     if request.method == 'POST':
         request_body = request.get_json()
         print(request_body)
@@ -30,6 +49,10 @@ def rooms_endpoint():
     } 
     else:
         return rooms
+    
+@app.route("/bookings")
+def bookings_endpoint():
+    return 0 #Fixa till /bookings-endpointen så den kan spara en bokning i databasen
 
 
     
@@ -37,10 +60,6 @@ def rooms_endpoint():
 def one_room_endpoint():
     if request.method == 'GET':
         return rooms[id]
-
-@app.route("/get_my_ip")
-def get_my_ip():
-    return jsonify({'ip': request.remote_addr}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=PORT, debug=True, ssl_context=(
