@@ -14,7 +14,7 @@ dburl = os.environ.get("DB_URL")
 
 print(dburl)
 
-conn = psycopg.connect(dburl, autocommit=True, row_factory=dict_row)
+conn = psycopg.connect(dburl, row_factory=dict_row)
 
 app = Flask(__name__)
 CORS(app) # Tillåt cross-origin requests
@@ -48,11 +48,18 @@ def rooms_endpoint(): #Fixa till /rooms-endpointen så den hämtar rumslistan fr
         'msg': f"Du har skapat nytt rum, id:{len(rooms)-1}",
     } 
     else:
-        return rooms
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM hotel_room ORDER BY room_number")
+            return cur.fetchall()
     
 @app.route("/bookings")
 def bookings_endpoint():
-    return 0 #Fixa till /bookings-endpointen så den kan spara en bokning i databasen
+    with conn.cursor() as cur:
+            cur.execute("""
+                        SELECT * 
+                        FROM hotel_room 
+                        WHERE id = %s""", [id])
+            return cur.fetchone()
 
 
     

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotell bokning</title>
+</head>
+<body>
+    
+        <select id="room"></select>
+        <select id="guest"></select>
+        <input type="date">
+        <input type="button" id="btnBook" value="BOKA">
+
+    <script>
+        const API_URL = "https://vm2208.kaj.pouta.csc.fi:8332/rooms"
+        async function getRooms(){
+            const resp = await fetch(API_URL);
+            const rooms = await resp.json();
+
+            let roomsHtml = "<option>Välj rum</option>";
+            for(room of rooms){
+                roomsHtml += `
+                <option value="${room.id}">${room.room_number}</option>`;
+            }
+            document.querySelector('#room').innerHTML = roomsHtml;
+            
+        }
+        getRooms();
+
+        async function createBooking(){
+            const booking = {
+                room: document.querySelector('#room').value,
+                guest: document.querySelector('#guest').value,
+                datefrom: document.querySelector('#datefrom').value
+            }
+            console.log(booking);
+
+            const resp = await fetc(`${API_URL}/bookings`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON/stringif
+            })
+        }
+
+        document.querySelector('#btnBook').addEventListener('click', createBooking)
+    </script>
+</body>
+</html>
