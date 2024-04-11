@@ -49,9 +49,11 @@ def rooms_endpoint(): #Fixa till /rooms-endpointen så den hämtar rumslistan fr
 def bookings():
     if request.method == 'GET':
         with conn.cursor() as cur:
-            cur.execute("""SELECT *
+            cur.execute("""SELECT hotel_booking.*, hotel_guest.name AS guest_name, hotel_room.room_number
                         FROM hotel_booking
-                        ORDER BY datefrom 
+                        INNER JOIN hotel_guest ON hotel_booking.guest_id = hotel_guest.id
+                        INNER JOIN hotel_room ON hotel_booking.room_id = hotel_room.id
+                        ORDER BY hotel_booking.datefrom;
                         """)
             return cur.fetchall()
         
