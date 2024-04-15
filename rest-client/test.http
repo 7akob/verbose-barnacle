@@ -1,0 +1,8 @@
+@aiURL = {{$dotenv AI_API}}
+
+###
+POST {{aiURL}}
+Content-Type: application/json
+{
+    "question": "Fungerar detta",
+}
